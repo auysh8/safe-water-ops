@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Safe Water Operations</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header>
+      <div>
+        <h1>Safe Water Program</h1>
+        <p>Field Visit Planning & Operations Platform</p>
+      </div>
+      <div id="userHeader" class="hidden">
+        <span id="userBadge" class="user-badge"></span>
+        <button onclick="logout()" class="btn btn-danger" style="margin-left: 8px;">Log Out</button>
+      </div>
+    </header>
+
+    <!-- Alert / Toast Banner -->
+    <div id="alertBox" class="hidden"></div>
+
+    <!-- Login View -->
+    <div id="loginSection" class="card" style="max-width: 400px; margin: 40px auto;">
+      <h2 style="margin-bottom: 16px;">Sign In</h2>
+      <div style="margin-bottom: 12px;">
+        <label>Email Address</label>
+        <input type="email" id="loginEmail" value="ramesh@safewater.org" />
+      </div>
+      <div style="margin-bottom: 16px;">
+        <label>Password</label>
+        <input type="password" id="loginPassword" value="Password123!" />
+      </div>
+      <button onclick="handleLogin()" class="btn btn-primary" style="width: 100%;">Log In</button>
+    </div>
+
+    <!-- Authenticated Dashboard -->
+    <div id="dashboardSection" class="hidden">
+      <!-- HQ Summary (Approvers & Admins only) -->
+      <section id="hqSummaryCard" class="card hidden">
+        <h2 style="margin-bottom: 16px;">HQ Global Overview</h2>
+        <div id="kpiContainer" class="kpi-grid"></div>
+        <h3 style="margin-bottom: 8px; font-size: 0.95rem;">Per-Location Cost Breakdown</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Location</th>
+                <th>State</th>
+                <th>Total Visits</th>
+                <th>Total Planned Cost</th>
+              </tr>
+            </thead>
+            <tbody id="locationSummaryBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Visit Creation Form -->
+      <section id="createVisitCard" class="card">
+        <h2>Plan a New Field Visit</h2>
+        <div class="form-grid">
+          <div>
+            <label>Title</label>
+            <input type="text" id="visitTitle" placeholder="e.g. Chlorination Audit" />
+          </div>
+          <div>
+            <label>Location</label>
+            <select id="visitLocation"></select>
+          </div>
+          <div>
+            <label>Planned Date</label>
+            <input type="date" id="visitDate" />
+          </div>
+          <div>
+            <label>Estimated Cost (INR)</label>
+            <input type="number" id="visitCost" min="0" placeholder="e.g. 5000" />
+          </div>
+          <div class="form-full">
+            <label>Purpose</label>
+            <textarea id="visitPurpose" rows="2" placeholder="State the objectives and activities..."></textarea>
+          </div>
+        </div>
+        <button onclick="handleCreateVisit()" class="btn btn-success" style="margin-top: 16px;">Save as Draft</button>
+      </section>
+
+      <!-- Visits Table -->
+      <section class="card">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <h2>Visits</h2>
+          <button onclick="loadVisits()" class="btn btn-neutral">Refresh</button>
+        </div>
+
+        <!-- Filter Toolbar -->
+        <div class="filter-bar">
+          <div class="filter-group">
+            <label for="filterStatus">Status:</label>
+            <select id="filterStatus" onchange="onFilterChange()">
+              <option value="">All Statuses</option>
+              <option value="DRAFT">DRAFT</option>
+              <option value="PENDING">PENDING</option>
+              <option value="APPROVED">APPROVED</option>
+              <option value="REJECTED">REJECTED</option>
+              <option value="COMPLETED">COMPLETED</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label for="filterLocation">Location:</label>
+            <select id="filterLocation" onchange="onFilterChange()">
+              <option value="">All Locations</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Officer</th>
+                <th>Location</th>
+                <th>Planned Date</th>
+                <th>Cost</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="visitsTableBody"></tbody>
+          </table>
+        </div>
+
+        <!-- Pagination Controls -->
+        <div class="pagination-bar">
+          <div>
+            Page <span id="pageDisplay">1</span> of <span id="totalPagesDisplay">1</span> (<span id="totalCountDisplay">0</span> total)
+          </div>
+          <div class="pagination-controls">
+            <button id="prevPageBtn" onclick="changePage(-1)" class="btn btn-neutral" disabled>Previous</button>
+            <button id="nextPageBtn" onclick="changePage(1)" class="btn btn-neutral" disabled>Next</button>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Visit Details & History Modal -->
+    <div id="detailModal" class="modal-overlay hidden" onclick="if(event.target === this) closeDetailModal()">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 id="modalTitle">Visit Details & History</h3>
+          <button class="modal-close" onclick="closeDetailModal()">&times;</button>
+        </div>
+        <div id="modalBody"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
