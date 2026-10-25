@@ -7,3 +7,7 @@ yarn-error.log*
 coverage/
 dist/
 config.bat
+
+# Security blocklist
+api.js
+*.orc
